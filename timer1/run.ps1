@@ -74,9 +74,8 @@ function Invoke-ScaAccess {
 
 function Invoke-JobInitiator {
     [CmdletBinding()]
-    param(fakesharepoint -> grant SCA -> initiate job.
-New-MigrationItem |
-    Invoke-FakeSharePointr(ValueFromPipeline = $true)] $Item
+    param(
+        [Parameter(ValueFromPipeline = $true)] $Item
     )
     process {
         $body = [PSCustomObject]@{
@@ -98,8 +97,9 @@ New-MigrationItem |
     }
 }
 
-# Pipeline-chained invocation: produce item -> grant SCA -> initiate job.
+# Pipeline-chained invocation: produce item -> fakesharepoint -> grant SCA -> initiate job.
 New-MigrationItem |
+    Invoke-FakeSharePoint |
     Invoke-ScaAccess |
     Invoke-JobInitiator |
     ForEach-Object {
